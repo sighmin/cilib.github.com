@@ -1,0 +1,438 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Recent changes in master - Computational Intelligence Library</title>
+  <meta name="author" content="CIRG">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://cilib.github.com/blog/2012/04/12/recent-changes-in-master/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Computational Intelligence Library" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+});
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Computational Intelligence Library</a></h1>
+  
+    <h2>Simplifying Computational Intelligence</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:cilib.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/documentation">Documentation</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Recent Changes in Master</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-12T00:00:00+02:00" pubdate data-updated="true">Apr 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>A couple of patches recently made their way into the master branch of CIlib which
+affect the way CIlib is used. The changes were made to the stopping conditions,
+topologies and control parameters.</p>
+
+<h3 id="stopping-conditions">Stopping Conditions</h3>
+
+<p>In a bid to increase genericity (is that a word?) and remove duplicate code the
+stopping conditions package was revamped. The new stopping condition classes are as
+follows:</p>
+
+<ul>
+  <li>
+    <p>MeasuredStoppingCondition which takes in a measurment an Objective and a target
+The measurement is taken from the measurement package, objective can be either
+Maximum or Minimum and target is the value the measurement must exceed (above
+for Maximum, below for Minimum) for the algorithm to terminate.</p>
+  </li>
+  <li>
+    <p>MaintatinedStoppingCondition whcih takes in another StoppingCondition and the
+number of consecutive iterations for which the condition must hold before the
+algorithm can terminate.</p>
+  </li>
+</ul>
+
+<p>Here are a few examples showing the differences from the before and after the
+changes.</p>
+
+<h4 id="before">Before</h4>
+<p>Java:</p>
+
+<pre><code>StoppingCondition sc = new MaximumIterations(2000);
+
+StoppingCondition sc = new MinimumDiversity();
+sc.setMinimumDiversity(ConstantControlParameter.of(0.01));
+sc.setConsecutiveIterations(ConstantControlParameter.of(20));
+</code></pre>
+
+<p>XML:</p>
+
+<pre><code>&lt;addStoppingCondition class="stoppingcondition.MaximumIterations" maximumIterations="2000"/&gt;
+
+&lt;addStoppingCondition class="stoppingcondition.MinimumDiversity"&gt;
+    &lt;minimumDiversity class="controlparameter.ConstantControlParameter" parameter="0.01"/&gt;
+    &lt;consecutiveIterations class="controlparameter.ConstantControlParameter" parameter="20"/&gt;
+&lt;/addStoppingCondition&gt;
+</code></pre>
+
+<h4 id="after">After</h4>
+<p>Java:</p>
+
+<pre><code>StoppingCondition sc = new MeasuredStoppingCondition(new Iterations(), new Maximum(), 2000);
+
+StoppingCondition sc = new MaintainedStoppingCondition(new MeasuredStoppingCondition(new Diversity(), new Minimum(), 0.01), 20);
+</code></pre>
+
+<p>XML:</p>
+
+<pre><code>&lt;addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="2000"&gt;
+    &lt;measurement class="measurement.generic.Iterations"/&gt;
+    &lt;objective class="stoppingcondition.Maximum/&gt;"
+&lt;/addStoppingCondition&gt;
+
+&lt;addStoppingCondition class="stoppingcondition.MaintainedStoppingCondition" consecutiveIterations="20"&gt;
+    &lt;condition class="stoppingcondition.MeasuredStoppingCondition" target="0.01"&gt;
+        &lt;measurement class="measurement.single.diversity.Diversity"/&gt;
+        &lt;objective class="stoppingcondition.Minimum/&gt;"
+    &lt;/condition&gt;
+&lt;/addStoppingCondition&gt;
+</code></pre>
+
+<h3 id="topologies">Topologies</h3>
+
+<p>The main difference regarding topologies is how to get the best entity/entities.
+The getBestEntity method has been removed from the Topology classes and has been
+placed in the Topologies class as a static method along with a number of other
+methods. This was done to prevent overcrowding the topology interface and to
+separate concerns since a topology is only suppose to impose a structure on a
+population of entities.</p>
+
+<h4 id="before-1">Before</h4>
+
+<pre><code>Particle currentBest = topology.getBestEntity();
+Particle gBest = topology.getBestEntity(new SocialBestFitnessComparator());
+
+Particle nBest = particle.getNeighbourhoodBest();
+// Although to the nBest could have changed so a more accurate way would be
+// to iterate through the neighbourhood of the particle and compare each one
+</code></pre>
+
+<h4 id="after-1">After</h4>
+
+<pre><code>Particle currentBest = Topologies.getBestEntity(topology);
+Particle gBest = Topologies.getBestEntity(topology, new SocialBestFitnessComparator());
+
+Particle currentNBest = Topologies.getNeighbourhoodBest(topology, particle);
+Particle nBest = Topologies.getNeighbourhoodBest(topology, particle, new SocialBestFitnessComparator());
+</code></pre>
+
+<h3 id="control-parameters">Control Parameters</h3>
+
+<p>Before, using control parameters that could change (e.g. linear increasing/decreasing
+parameters) meant that the user had to update the parameters every iteration.
+This became a hassle if a control parameter was introduced into code that already
+had a big inheritance structure since a mechanism for updating the control parameters
+would have to be introduced into each of those classes.</p>
+
+<p>The changes made allow a control parameter to automatically update its value when
+the getParameter method is called. One implication of this is that parameters cant
+be updated only once per iteration. This is a problem for algorithms that use multiple
+stopping conditions or whose stopping conditions dont include maximum iterations
+(ControlParameters updateon percentage completion of an algorith which is determined
+by the stopping conditions). This problem is dealt with by introducing a new
+ControlParameter: UpdateOnIterationControlParameter which takes in a delegate
+control parameter and updates it at the end of each iteration.</p>
+
+<p>Additionally, some parameters were merged to avoid duplicating code and control
+parameters are only bounded if used with BoundedControlParameter (which is a class
+now, not an interface).</p>
+
+<h4 id="before-2">Before</h4>
+<p>Java:</p>
+
+<pre><code>// Only updated at the end of an iteration or when updateParameter was called
+LinearIncreasingControlParameter cp = new LinearIncreasingControlParameter();
+cp.setUpperBound(0.9);
+cp.setLowerBound(0.4);
+cp.setParameter(0.4);
+
+LinearDecreasingControlParameter cp = new LinearDecreasingControlParameter();
+cp.setUpperBound(0.9);
+cp.setLowerBound(0.4);
+cp.setParameter(0.9);
+</code></pre>
+
+<p>XML:</p>
+
+<pre><code>&lt;inertiaWeight class="controlparameter.LinearIncreasingControlParameter"&gt;
+    &lt;upperBound value="0.9"/&gt;
+    &lt;lowerBound value="0.4"/&gt;
+    &lt;parameter value="0.4"/&gt;
+&lt;/inertiaWeight&gt;
+
+&lt;inertiaWeight class="controlparameter.LinearDecreasingControlParameter"&gt;
+    &lt;upperBound value="0.9"/&gt;
+    &lt;lowerBound value="0.4"/&gt;
+    &lt;parameter value="0.9"/&gt;
+&lt;/inertiaWeight&gt;
+</code></pre>
+
+<h4 id="after-2">After</h4>
+<p>Java:</p>
+
+<pre><code>// Updates whenever it is called
+LinearlyVaryingControlParameter cp = new LinearlyVaryingControlParameter();
+cp.setInitialValue(0.4);
+cp.setFinalValue(0.9);
+
+LinearlyVaryingControlParameter cp = new LinearlyVaryingControlParameter();
+cp.setInitialValue(0.9);
+cp.setFinalValue(0.4);
+
+// Will update otherCP at the end of an iteration
+UpdateOnIterationControlParameter cp = new UpdateOnIterationControlParameter();
+cp.setDelegate(otherCP);
+
+// Will always keep otherCP within bounds
+BoundedControlParameter cp = new BoundedControlParameter();
+cp.setBounds(new Bounds(-1, 1));
+cp.setDelegate(otherCP);
+</code></pre>
+
+<p>XML:</p>
+
+<pre><code>&lt;inertiaWeight class="controlparameter.LinearlyVaryingControlParameter" initialValue="0.4" finalValue="0.9"/&gt;
+
+&lt;inertiaWeight class="controlparameter.LinearlyVaryingControlParameter" initialValue="0.9" finalValue="0.4"/&gt;
+
+&lt;inertiaWeight class="controlparameter.UpdateOnIterationControlParameter"&gt;
+    &lt;delegate class="controlparameter.LinearlyVaryingControlParameter" initialValue="0.9" finalValue="0.4"/&gt;
+&lt;/inertiaWeight&gt;
+</code></pre>
+
+<p>If there are any questions join us on <a href="http://webchat.freenode.net/?channels=cilib">irc chat</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">CIRG</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-12T00:00:00+02:00" pubdate data-updated="true">Apr 12<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/updates/'>updates</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cilib.github.com/blog/2012/04/12/recent-changes-in-master/" data-via="" data-counturl="http://cilib.github.com/blog/2012/04/12/recent-changes-in-master/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/17/simplified-domain-string-grammar/" title="Next Post: Simplified domain string grammar">Simplified domain string grammar &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/12/075-release/">CIlib 0.7.5 released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/18/netbeans-cilib-and-sbt/">Netbeans, CIlib and SBT</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/16/removal-of-simulator-scripts/">New packaging, usage and removal of simulator scripts</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/13/math-formulae-in-documentation/">Math formulae in documentation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/23/niching-makeover-part-1/">Niching Makeover: part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/cilib">@cilib</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'cilib',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - CIRG -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

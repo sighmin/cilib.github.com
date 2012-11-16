@@ -1,0 +1,81 @@
+<p>This is a step-by-step guide to using Netbeans as your IDE for developing CIlib.
+It is assumed that the getting started guide for either <a href="getting-started.html">Linux</a> or <a href="windows-configurations.html">Windows</a> was followed and is working.</p>
+
+<h3 id="step-1-get-the-netbeans-scala-plugin">Step 1: Get the Netbeans Scala plugin</h3>
+
+<p>The nb-scala plugin is needed for Netbeans to work with Scala and SBT projects.
+The following steps will install nb-scala:</p>
+
+<ul>
+  <li>Download the correct version from <a href="http://sourceforge.net/projects/erlybird/files/nb-scala/">here</a></li>
+  <li>Extract the compressed archive somewhere on your hard drive (remember the location)</li>
+  <li>In Netbeans click on <code>Tools</code> -&gt; <code>Plugins</code></li>
+  <li>At the top, click on the <code>Downloaded</code> tab</li>
+  <li>Click the <code>Add Plugins...</code> button near the top</li>
+  <li>Browse to the location (the one you had to remember) where the archive was extracted</li>
+  <li>Select all the modules (Ctrl-click does the trick)</li>
+  <li>Click the <code>Ok</code> button at the bottom</li>
+  <li>Click the <code>Install</code> button near the bottom of the <code>Plugins</code> window</li>
+  <li>Click <code>Next</code>, tick the <code>Accept</code> (only if you agree to the license) block then click <code>Update</code></li>
+  <li>If a validation warning appears it should be safe to click <code>Continue</code></li>
+  <li>At this point Netbeans will ask you to restart the IDE… please do so</li>
+</ul>
+
+<h3 id="step-2-get-the-sbt-netbeans-plugin">Step 2: Get the sbt-netbeans plugin</h3>
+
+<p>The sbt-netbeans plugin allows SBT projects wo be opened by Netbeans by generating
+an Ant project using SBT commands. The following steps will install sbt-netbeans</p>
+
+<ul>
+  <li>Open the global SBT plugins file usually situated at <code>~/.sbt/plugins/plugins.sbt</code> 
+(<code>~</code> is your home folder). If it does not exist create it.</li>
+  <li>
+    <p>Add the following to the end of the file
+      resolvers += ScalaToolsSnapshots</p>
+
+    <pre><code>  resolvers += "remeniuk repo" at "http://remeniuk.github.com/maven"
+    
+  libraryDependencies += "org.netbeans" %% "sbt-netbeans-plugin" % "0.1.4"   Note the empty lines between each line of text.
+</code></pre>
+  </li>
+  <li>Save the file</li>
+</ul>
+
+<h3 id="step-3-set-up-the-project">Step 3: Set up the project</h3>
+
+<p>The following should be done in the terminal:</p>
+
+<ul>
+  <li>Change to the directory CIlib is in, e.g. if it is in <code>~/src/cilib</code> then
+      $ cd ~/src/cilib</li>
+  <li>Run SBT
+      $ sbt</li>
+  <li>Run the netbeans command
+      &gt; netbeans</li>
+  <li>Exit SBT
+      &gt; exit</li>
+</ul>
+
+<h3 id="step-4-open-the-project-in-netbeans">Step 4: Open the project in Netbeans</h3>
+
+<p>CIlib should now be ready to be opened by Netbeans.</p>
+
+<ul>
+  <li>Open Netbeans</li>
+  <li>Click <code>File</code> -&gt; <code>Open Project...</code></li>
+  <li>Browse to the location that the CIlib folder is in e.g. if the CIlib source code
+is in <code>~/src/cilib</code> then browse to <code>~/src</code>. The CIlib folder should have an icon 
+containing two red marks to the left of it.</li>
+  <li>Select the CIlib folder and click <code>Open Project</code> near the bottom</li>
+  <li>In the <code>Projects</code> view expand the cilib project and the <code>Libraries</code> folder</li>
+  <li>Open the <code>cilib-library</code> and <code>simulator</code> sub-projects by double clicking on them</li>
+</ul>
+
+<p>All the library code (algorithms, problems, etc) is in the <code>cilib-library</code> sub-project.</p>
+
+<h4 id="done">Done</h4>
+
+<p>Please report any errors found either on the CIlib github page or on IRC. If 
+there are people in the channel but are not responding leave a message anyway,
+someone will eventually see it.</p>
+

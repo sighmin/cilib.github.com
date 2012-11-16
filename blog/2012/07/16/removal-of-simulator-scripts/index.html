@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>New packaging, usage and removal of simulator scripts - Computational Intelligence Library</title>
+  <meta name="author" content="CIRG">
+
+  
+  <meta name="description" content="Removal of simulator scripts from the core distribution of CIlib. Functionality subsumed by simulator jar.">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://cilib.github.com/blog/2012/07/16/removal-of-simulator-scripts/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Computational Intelligence Library" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+});
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Computational Intelligence Library</a></h1>
+  
+    <h2>Simplifying Computational Intelligence</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:cilib.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/documentation">Documentation</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">New Packaging, Usage and Removal of Simulator Scripts</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-16T00:00:00+02:00" pubdate data-updated="true">Jul 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In the past, CIlib was released as a distribution and included a few artifacts:</p>
+
+<ul>
+  <li>That actual CIlib “fat” jar file (together with external dependencies).</li>
+  <li>A collection of sample XML documents that defined the specifications for the XML based simulator.</li>
+  <li>Shell scripts for users to “run” the simulator, providing a XML specification.</li>
+</ul>
+
+<p>We are continuously trying to improve CIlib and, as such, we have decided to remove the simulator
+scripts in favor of letting the simulator provide the “running” functionality in the form of an executable jar
+file.</p>
+
+<p>Furthermore, from a source level, CIlib uses Maven as the project build tool but the fact that the project
+wants to move to a Scala DSL replacement of the XML based simulator means that we should reevaluate the
+use of Maven as well.</p>
+
+<p>We will discuss each of these in the sections that follow.</p>
+
+<h3 id="maven-the-unfriendly-build-tool">Maven, the unfriendly build tool</h3>
+
+<p>The changes mentioned above require us to rethink how we package CIlib. It was decided
+to rather split out the “simulator project” from the library. The remaining library is
+now focused on all the algorithms and is devoid of the simulator logic.</p>
+
+<p>Going forward, maven will be dropped and will be replaced with
+<a href="http://www.scala-sbt.org">SBT</a>. SBT is a much simpler, more powerful build system,
+particularly since the way you configure SBT is using scala and the SBT DSL. This means that
+much of the maven plugin XML verbosity is simply removed and replaced with a few lines
+of code - an infinitely saner way of doing the build definition.</p>
+
+<h3 id="simulator-scripts-removed-yes-thats-right">Simulator scripts removed, yes that’s right</h3>
+
+<p>Going forward, we will be providing a simple reference from which users can create
+their own “simulator” scripts, but this script will not be provided as part of the
+CIlib distribution.</p>
+
+<p>The script is available from the gist below, and is essentially for reference
+purposes only (however we encourage the submission of any “fixes” that you may have):</p>
+
+<div><script src="https://gist.github.com/3122738.js?file="></script>
+<noscript><pre><code>#!/bin/bash
+
+# This script expects a few environment variables:
+# $JAVA_OPTS: This variable represents the options passed directly to the JVM
+#             Consult the JVM man page for these options.
+# $CILIB_ASSEMBLY: Path to the assembled simulator jar file, which includes
+#                  the cilib library and other required libraries
+
+java ${JAVA_OPTS} -jar ${CILIB_ASSEMBLY} $@
+</code></pre></noscript></div>
+
+<p>The gist provides a script that is friendly for Linux and Mac users - if any Windows
+users require such a script, please either provide us with one or request that one is
+created for you (not sure when we can get the time to figure that beast out though :P)</p>
+
+<p>It is recommended that you place the script somewhere on your <code>$PATH</code>, so that it will be available
+when needed. Please refer to the script itself for the specific variables that can be altered.</p>
+
+<p>For any questions, please use the <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#099;&#105;&#108;&#105;&#098;&#045;&#117;&#115;&#101;&#114;&#064;&#103;&#114;&#111;&#117;&#112;&#115;&#046;&#103;&#111;&#111;&#103;&#108;&#101;&#046;&#099;&#111;&#109;">&#109;&#097;&#105;&#108;&#105;&#110;&#103;&#032;&#108;&#105;&#115;&#116;</a>
+or contact one of us in the <code>#cilib</code> on Freenode.net</p>
+
+<p>Just in case, the information above will also be available in the documentation,
+available from the links above.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">CIRG</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-16T00:00:00+02:00" pubdate data-updated="true">Jul 16<span>th</span>, 2012</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cilib.github.com/blog/2012/07/16/removal-of-simulator-scripts/" data-via="" data-counturl="http://cilib.github.com/blog/2012/07/16/removal-of-simulator-scripts/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/07/13/math-formulae-in-documentation/" title="Previous Post: Math formulae in documentation">&laquo; Math formulae in documentation</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/07/18/netbeans-cilib-and-sbt/" title="Next Post: Netbeans, CIlib and SBT">Netbeans, CIlib and SBT &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/12/075-release/">CIlib 0.7.5 released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/18/netbeans-cilib-and-sbt/">Netbeans, CIlib and SBT</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/16/removal-of-simulator-scripts/">New packaging, usage and removal of simulator scripts</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/13/math-formulae-in-documentation/">Math formulae in documentation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/23/niching-makeover-part-1/">Niching Makeover: part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/cilib">@cilib</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'cilib',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - CIRG -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Simplified domain string grammar - Computational Intelligence Library</title>
+  <meta name="author" content="CIRG">
+
+  
+  <meta name="description" content="Updated grammar for domain sting parsing. The updated grammar results in a simpler parse for the domain string and clearer instance creation &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://cilib.github.com/blog/2012/04/17/simplified-domain-string-grammar/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Computational Intelligence Library" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+});
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Computational Intelligence Library</a></h1>
+  
+    <h2>Simplifying Computational Intelligence</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:cilib.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/documentation">Documentation</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Simplified Domain String Grammar</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-17T00:00:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2 id="the-need-to-change-domain-string-grammar">The need to change domain string grammar</h2>
+<p>Defining a domain for use within a simulation is allowed within CIlib
+as a simple string, such as:</p>
+
+<pre><code>R(-10.0,3.0)^7,Z(0,1),B^2,R(0.0,5.0)
+</code></pre>
+
+<p>The notation is simple enough, but it is unfortunately difficult to work with
+because the ‘,’ token is overloaded to be both a separator for individual
+dimensions within the domain definitions as well as being the separator for
+lower and upper bound definitions within the dimension as well.</p>
+
+<p>In order to parse the above, a fair amount of state needs to be maintained
+to know the current “scope”. This mutable state results is utter havoc with
+concurrent usage of the domain parser. Two possible fixes could be applied to
+resolve this issue:</p>
+
+<ol>
+  <li>Re-create the parser each time, ensuring that each thread has its own
+instance.</li>
+  <li>Make the parser stateless.</li>
+</ol>
+
+<p>Option (1) seems reasonable but has a massive amount of effort for very little
+gain, whereas option (2) means that the parser can not only be reused, but that
+the concurrency issues should just disappear because no state is mangled.</p>
+
+<p>As a result, we have reimplemented the parser to be as stateless as possible.
+There is still some state within the parboiled parser library code that we
+have made peace with.</p>
+
+<h2 id="what-has-changed">What has changed</h2>
+<p>The new parser now has two phases: (1) expansion and (2) transformation. The
+expansion process is responsible to convert “exponent” strings into simpler
+forms. As an example:</p>
+
+<pre><code>R^7 =&gt; R,R,R,R,R,R,R
+</code></pre>
+
+<p>The transformation phase then converts the declared types into actual instances
+that may be used within the algorithm. In order to differentiate the bounds
+and dimension elements, the upper and lower bounds separator has been changed
+from a ‘,’ (comma) to a ‘:’ (colon).</p>
+
+<p>The new domain string is then:</p>
+
+<pre><code>R(-10.0:3.0)^7,Z(0:1),B^2,R(0.0:5.0)
+</code></pre>
+
+<p>This is a minor change to the domain string representation, but the benefits
+we have gained through this little modification are far too large to pass up.
+To allow for the user to update the XML simulation specifications, clearer
+error messages have been created with the simulation refusing to execute
+without an updated domain string.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">CIRG</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-17T00:00:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/updates/'>updates</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cilib.github.com/blog/2012/04/17/simplified-domain-string-grammar/" data-via="" data-counturl="http://cilib.github.com/blog/2012/04/17/simplified-domain-string-grammar/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/12/recent-changes-in-master/" title="Previous Post: Recent changes in master">&laquo; Recent changes in master</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/23/niching-makeover-part-1/" title="Next Post: Niching Makeover: part 1">Niching Makeover: part 1 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/12/075-release/">CIlib 0.7.5 released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/18/netbeans-cilib-and-sbt/">Netbeans, CIlib and SBT</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/16/removal-of-simulator-scripts/">New packaging, usage and removal of simulator scripts</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/13/math-formulae-in-documentation/">Math formulae in documentation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/23/niching-makeover-part-1/">Niching Makeover: part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/cilib">@cilib</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'cilib',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - CIRG -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

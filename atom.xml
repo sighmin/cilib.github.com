@@ -1,153 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Computational Intelligence Library</title>
-  <meta name="author" content="CIRG">
-
-  
-  <meta name="description" content="The 0.7.5 release of CIlib has been staged. The release consists of many changes from
-various contributors. We would like to thank everyone for the &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://cilib.github.com/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Computational Intelligence Library" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [['$','$'], ['\\(','\\)']],
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-    }
-});
-</script>
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Computational Intelligence Library</a></h1>
-  
-    <h2>Simplifying Computational Intelligence</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:cilib.github.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/documentation">Documentation</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
+  <title><![CDATA[Computational Intelligence Library]]></title>
+  <link href="http://cilib.github.com/atom.xml" rel="self"/>
+  <link href="http://cilib.github.com/"/>
+  <updated>2012-11-16T14:01:52+02:00</updated>
+  <id>http://cilib.github.com/</id>
+  <author>
+    <name><![CDATA[CIRG]]></name>
     
-      <h1 class="entry-title"><a href="/blog/2012/11/12/075-release/">CIlib 0.7.5 Released</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-
-
-<time datetime="2012-11-12T00:00:00+02:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The 0.7.5 release of CIlib has been staged. The release consists of many changes from
+  <entry>
+    <title type="html"><![CDATA[CIlib 0.7.5 released]]></title>
+    <link href="http://cilib.github.com/blog/2012/11/12/075-release/"/>
+    <updated>2012-11-12T00:00:00+02:00</updated>
+    <id>http://cilib.github.com/blog/2012/11/12/075-release</id>
+    <content type="html"><![CDATA[<p>The 0.7.5 release of CIlib has been staged. The release consists of many changes from
 various contributors. We would like to thank everyone for the contributions to this
 release. What follows are the main highlights for the 0.7.5 release.</p>
 
-</div>
+<!-- more -->
+
+<h3 id="change-log">Change Log</h3>
+<p>Numerous changes have been included into the release, but the most notable are listed here:</p>
+
+<ul>
+  <li>New clustering implementation (for PSOs).</li>
+  <li>Rework of Niching (NichePSO) to be more sane.</li>
+  <li>Removed the “games” package due to its unmaintained state. It will be
+revised in a future release.</li>
+  <li>Removed several methods that are largely not required (in Meansurements
+and other related classes)</li>
+  <li>FunctionMinimizationProblem and FunctionMaximizationProblem have been
+removed. Instead, use FunctionOptimizationProblem with a given
+Objective. The only valid Objectives are Minimize and Maximize, with
+Minimize being assumed to be the default, if none is specified.</li>
+  <li>Added Lambda-Gamma neural networks</li>
+  <li>Removed a number of interal classes in favor of those already provided
+by dependencies</li>
+  <li>A number of crossover strategies have had fixes applied / newly added</li>
+  <li>Cascading neural networks</li>
+  <li>Migrated from maven to SBT as build system</li>
+  <li>Several deprecations have been removed</li>
+  <li>Additional benchmark functions have been included</li>
+</ul>
+
+<h3 id="issues">Issues</h3>
+<p>For bug reports or feature requests, please raise an issue
+<a href="http://github.com/cilib/cilib/issues">here</a>.
+Feel free to contact us via the
+<a href="https://groups.google.com/forum/?fromgroups=#!forum/cilib-user">user</a> or
+<a href="https://groups.google.com/forum/?fromgroups=#!forum/cilib-dev">development</a> mailing
+lists. We are also available on the FreeNode IRC network in the channel <code>#cilib</code>.</p>
+
+<h3 id="distribution">Distribution</h3>
+
+<p>In this release, we have changed the layout of the project such that there are now
+two sub-projects: <code>library</code> and <code>simulator</code>. The <code>library</code> contains all the source
+related to the algorithm components with the <code>simulator</code> containing the actual framework
+to run the CIlib simulator application.</p>
+
+<p>Additionally, the library will be available from the
+<a href="http://search.maven.org/#artifactdetails%7Cnet.cilib%7Clibrary_2.9.2%7C0.7.5%7Cjar">Maven central</a>
+repository for direct inclusion into your projects. This should result in friendlier usage
+for all build tools in the current ecosystem (Maven, Ant, Gradle, SBT, etc).
+The simulator assembly, which
+contains the simulator application with bundled library code and a series of
+example XML files is available <a href="http://cilib.net/releases/cilib-simulator-0.7.5.zip">here</a>.
+It is recommended that a script is setup, and placed on your <code>$PATH</code> to run the simulator.</p>
+
+<div><script src="https://gist.github.com/3122738.js?file="></script>
+<noscript><pre><code>#!/bin/bash
+
+# This script expects a few environment variables:
+# $JAVA_OPTS: This variable represents the options passed directly to the JVM
+#             Consult the JVM man page for these options.
+# $CILIB_ASSEMBLY: Path to the assembled simulator jar file, which includes
+#                  the cilib library and other required libraries
+
+java ${JAVA_OPTS} -jar ${CILIB_ASSEMBLY} $@
+</code></pre></noscript></div>
+
+]]></content>
+  </entry>
   
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/11/12/075-release/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/18/netbeans-cilib-and-sbt/">Netbeans, CIlib and SBT</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-18T00:00:00+02:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a step-by-step guide to using Netbeans as your IDE for developing CIlib.
+  <entry>
+    <title type="html"><![CDATA[Netbeans, CIlib and SBT]]></title>
+    <link href="http://cilib.github.com/blog/2012/07/18/netbeans-cilib-and-sbt/"/>
+    <updated>2012-07-18T00:00:00+02:00</updated>
+    <id>http://cilib.github.com/blog/2012/07/18/netbeans-cilib-and-sbt</id>
+    <content type="html"><![CDATA[<p>This is a step-by-step guide to using Netbeans as your IDE for developing CIlib.
 It is assumed that SBT 0.11.3, Scala 2.9.1 or later, and Netbeans 7.1 are installed
 and that the latest CIlib source code has been retrieved.</p>
 
@@ -228,42 +173,15 @@ containing two red marks to the left of it.</li>
 <p>Please report any errors found either on the CIlib github page or on IRC. If
 there are people in the channel but are not responding leave a message anyway,
 someone will eventually see it.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/16/removal-of-simulator-scripts/">New Packaging, Usage and Removal of Simulator Scripts</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-16T00:00:00+02:00" pubdate data-updated="true">Jul 16<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In the past, CIlib was released as a distribution and included a few artifacts:</p>
+  <entry>
+    <title type="html"><![CDATA[New packaging, usage and removal of simulator scripts]]></title>
+    <link href="http://cilib.github.com/blog/2012/07/16/removal-of-simulator-scripts/"/>
+    <updated>2012-07-16T00:00:00+02:00</updated>
+    <id>http://cilib.github.com/blog/2012/07/16/removal-of-simulator-scripts</id>
+    <content type="html"><![CDATA[<p>In the past, CIlib was released as a distribution and included a few artifacts:</p>
 
 <ul>
   <li>That actual CIlib “fat” jar file (together with external dependencies).</li>
@@ -326,42 +244,15 @@ or contact one of us in the <code>#cilib</code> on Freenode.net</p>
 
 <p>Just in case, the information above will also be available in the documentation,
 available from the links above.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/13/math-formulae-in-documentation/">Math Formulae in Documentation</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-13T00:00:00+02:00" pubdate data-updated="true">Jul 13<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This has been something that has provided an unending amount of frustration: creating LaTeX style math
+  <entry>
+    <title type="html"><![CDATA[Math formulae in documentation]]></title>
+    <link href="http://cilib.github.com/blog/2012/07/13/math-formulae-in-documentation/"/>
+    <updated>2012-07-13T00:00:00+02:00</updated>
+    <id>http://cilib.github.com/blog/2012/07/13/math-formulae-in-documentation</id>
+    <content type="html"><![CDATA[<p>This has been something that has provided an unending amount of frustration: creating LaTeX style math
 formula on the web. That being said, I’m very thankful to <code>oscarvarto</code> on the IRC channel for pointing us
 towards a little library called <a href="http://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 
@@ -373,42 +264,15 @@ inertia component):</p>
 <script type="math/tex; mode=display">v_{ij}(t+1) = w_i v_{ij}(t) + r_1 c_1 (y_{ij}(t) - x_{ij}(t)) + r_2 c_2 (\hat{y}_{j}(t) - x_{ij}(t))</script>
 
 <p>This should provide us with better tools going forward :)</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/23/niching-makeover-part-1/">Niching Makeover: Part 1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-23T00:00:00+02:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The niching package has recently had a major refactor. This post and a few later
+  <entry>
+    <title type="html"><![CDATA[Niching Makeover: part 1]]></title>
+    <link href="http://cilib.github.com/blog/2012/04/23/niching-makeover-part-1/"/>
+    <updated>2012-04-23T00:00:00+02:00</updated>
+    <id>http://cilib.github.com/blog/2012/04/23/niching-makeover-part-1</id>
+    <content type="html"><![CDATA[<p>The niching package has recently had a major refactor. This post and a few later
 ones will explain the changes and how to use them.</p>
 
 <h3 id="going-functional">Going Functional</h3>
@@ -575,42 +439,15 @@ programming itself e.g. Scala can condense the above to one line per function.</
 <h4 id="whats-next">What’s next?</h4>
 
 <p>In the next post the niching functions and structures will be introduced.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/17/simplified-domain-string-grammar/">Simplified Domain String Grammar</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-17T00:00:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="the-need-to-change-domain-string-grammar">The need to change domain string grammar</h2>
+  <entry>
+    <title type="html"><![CDATA[Simplified domain string grammar]]></title>
+    <link href="http://cilib.github.com/blog/2012/04/17/simplified-domain-string-grammar/"/>
+    <updated>2012-04-17T00:00:00+02:00</updated>
+    <id>http://cilib.github.com/blog/2012/04/17/simplified-domain-string-grammar</id>
+    <content type="html"><![CDATA[<h2 id="the-need-to-change-domain-string-grammar">The need to change domain string grammar</h2>
 <p>Defining a domain for use within a simulation is allowed within CIlib
 as a simple string, such as:</p>
 
@@ -664,42 +501,15 @@ we have gained through this little modification are far too large to pass up.
 To allow for the user to update the XML simulation specifications, clearer
 error messages have been created with the simulation refusing to execute
 without an updated domain string.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/12/recent-changes-in-master/">Recent Changes in Master</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-12T00:00:00+02:00" pubdate data-updated="true">Apr 12<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A couple of patches recently made their way into the master branch of CIlib which
+  <entry>
+    <title type="html"><![CDATA[Recent changes in master]]></title>
+    <link href="http://cilib.github.com/blog/2012/04/12/recent-changes-in-master/"/>
+    <updated>2012-04-12T00:00:00+02:00</updated>
+    <id>http://cilib.github.com/blog/2012/04/12/recent-changes-in-master</id>
+    <content type="html"><![CDATA[<p>A couple of patches recently made their way into the master branch of CIlib which
 affect the way CIlib is used. The changes were made to the stopping conditions,
 topologies and control parameters.</p>
 
@@ -882,114 +692,7 @@ cp.setDelegate(otherCP);
 </code></pre>
 
 <p>If there are any questions join us on <a href="http://webchat.freenode.net/?channels=cilib">irc chat</a>.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2012/11/12/075-release/">CIlib 0.7.5 released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/18/netbeans-cilib-and-sbt/">Netbeans, CIlib and SBT</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/16/removal-of-simulator-scripts/">New packaging, usage and removal of simulator scripts</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/13/math-formulae-in-documentation/">Math formulae in documentation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/23/niching-makeover-part-1/">Niching Makeover: part 1</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
-  </ul>
-  
-  <a href="https://github.com/cilib">@cilib</a> on GitHub
-  
-  <script type="text/javascript">
-    $.domReady(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'cilib',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-
-  
-</aside>
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - CIRG -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
-  
-
-
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
-</html>
+</feed>
