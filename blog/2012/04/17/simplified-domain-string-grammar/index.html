@@ -113,6 +113,9 @@ because the &#8216;,&#8217; token is overloaded to be both a separator for indiv
 dimensions within the domain definitions as well as being the separator for
 lower and upper bound definitions within the dimension as well.</p>
 
+<!-- more -->
+
+
 <p>In order to parse the above, a fair amount of state needs to be maintained
 to know the current &#8220;scope&#8221;. This mutable state results is utter havoc with
 concurrent usage of the domain parser. Two possible fixes could be applied to

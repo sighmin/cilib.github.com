@@ -203,60 +203,12 @@ and that the latest CIlib source code has been retrieved.</p>
 scripts in favor of letting the simulator provide the &#8220;running&#8221; functionality in the form of an executable jar
 file.</p>
 
-<p>Furthermore, from a source level, CIlib uses Maven as the project build tool but the fact that the project
-wants to move to a Scala DSL replacement of the XML based simulator means that we should reevaluate the
-use of Maven as well.</p>
-
-<p>We will discuss each of these in the sections that follow.</p>
-
-<h3>Maven, the unfriendly build tool</h3>
-
-<p>The changes mentioned above require us to rethink how we package CIlib. It was decided
-to rather split out the &#8220;simulator project&#8221; from the library. The remaining library is
-now focused on all the algorithms and is devoid of the simulator logic.</p>
-
-<p>Going forward, maven will be dropped and will be replaced with
-<a href="http://www.scala-sbt.org">SBT</a>. SBT is a much simpler, more powerful build system,
-particularly since the way you configure SBT is using scala and the SBT DSL. This means that
-much of the maven plugin XML verbosity is simply removed and replaced with a few lines
-of code - an infinitely saner way of doing the build definition.</p>
-
-<h3>Simulator scripts removed, yes that&#8217;s right</h3>
-
-<p>Going forward, we will be providing a simple reference from which users can create
-their own &#8220;simulator&#8221; scripts, but this script will not be provided as part of the
-CIlib distribution.</p>
-
-<p>The script is available from the gist below, and is essentially for reference
-purposes only (however we encourage the submission of any &#8220;fixes&#8221; that you may have):</p>
-
-<div><script src='https://gist.github.com/3122738.js'></script>
-<noscript><pre><code>#!/bin/bash
-
-# This script expects a few environment variables:
-# $JAVA_OPTS: This variable represents the options passed directly to the JVM
-#             Consult the JVM man page for these options.
-# $CILIB_ASSEMBLY: Path to the assembled simulator jar file, which includes
-#                  the cilib library and other required libraries
-
-java ${JAVA_OPTS} -jar ${CILIB_ASSEMBLY} $@
-</code></pre></noscript></div>
-
-
-<p>The gist provides a script that is friendly for Linux and Mac users - if any Windows
-users require such a script, please either provide us with one or request that one is
-created for you (not sure when we can get the time to figure that beast out though :P)</p>
-
-<p>It is recommended that you place the script somewhere on your <code>$PATH</code>, so that it will be available
-when needed. Please refer to the script itself for the specific variables that can be altered.</p>
-
-<p>For any questions, please use the <a href="mailto:cilib-user@groups.google.com">mailing list</a>
-or contact one of us in the <code>#cilib</code> on Freenode.net</p>
-
-<p>Just in case, the information above will also be available in the documentation,
-available from the links above.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/16/removal-of-simulator-scripts/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -340,170 +292,12 @@ inertia component):</p>
   <div class="entry-content"><p>The niching package has recently had a major refactor. This post and a few later
 ones will explain the changes and how to use them.</p>
 
-<h3>Going Functional</h3>
-
-<p>A functional approach has been taken with regards to the refactor. This means that
-instead of objects being changed in place (e.g. <code>particle.setCandidateSolution(newSolution)</code>)
-functions are used to create new objects with the changes in place. Currently CIlib
-is not completely set up for this so to emulate it first clone the object then make
-the changes to the cloned object.</p>
-
-<p>The reason for taking a functional approach is to reduce mutable state. Mutable
-state makes it harder to debug code because objects can be changed in multiple
-places. Functional programs work with immutable data meaning that a copy of the
-object is made when they need to be changed.</p>
-
-<p>Functional programming is a different paradigm to the way the rest of CIlib is
-implemented and so a few definitions are presented here to make the transition
-easier. For those who want to make changes to the code a java library,
-Functional Java (FJ), was used to implement the changes.</p>
-
-<h3>Definitions</h3>
-
-<ul>
-<li><h4>Function:</h4>
-
-<p>  A function is a unit of code that transforms an input into an output. The FJ
-  library has a number of function classes for different numbers of inputs e.g.</p>
-
-<pre><code>  F&lt;A, Z&gt;
-</code></pre>
-
-<p>  is a function that takes an A as input and outputs a Z and</p>
-
-<pre><code>  F2&lt;A, B, Z&gt;
-  F3&lt;A, B, C, Z&gt;
-  ...
-  F8&lt;A, B, C, D, E, F, G, H, Z&gt;
-</code></pre>
-
-<p>  take in an <code>A ... H</code> and return a <code>Z</code>. To apply the functions a method, <code>f(...)</code>,
-  is called. Here is an example that takes a particle and returns its candidate
-  solution.</p>
-
-<pre><code>  F&lt;Particle, Vector&gt; solution = new F&lt;Particle, Vector&gt;() {
-      public Vector f(Particle p) {
-          return (Vector) p.getCandidateSolution();
-      }
-  }
-</code></pre>
-
-<p>  and to call it for a particular particle</p>
-
-<pre><code>  solution.f(particularParticle)
-</code></pre></li>
-<li><h4>Tuple/Product:</h4>
-
-<p>  A tuple is a collection of heterogeneous data. It allows functions to return
-  more than one result. Using a similar naming convention to functions, FJ&#8217;s
-  tuples are called</p>
-
-<pre><code>  P1&lt;A&gt;
-  P2&lt;A, B&gt;
-  ...
-  P8&lt;A, B, C, D, E, F, G, H&gt;
-</code></pre>
-
-<p>  To create a tuple use the static method <code>P.p(...)</code> e.g. to create a tuple of a
-  particle with an associated score use</p>
-
-<pre><code>  P2&lt;Particle, Double&gt; x = P.p(particle, score)
-</code></pre>
-
-<p>  To access the individual elements of a tuple use the <code>_n()</code> methods, where n
-  is the position of the element in the tuple e.g.</p>
-
-<pre><code>  Particle particle = x._1()
-  Double score = x._2()
-</code></pre></li>
-<li><h4>Lists:</h4>
-
-<p>  Lists in FJ have far more functionality (no pun intended) than Java&#8217;s collections.
-  Here are a few operations that can be performed on them that apply the functional
-  paradigm.</p>
-
-<p>  &#8211; <strong>map</strong>: this applies a function to each element and returns a new list consisting
-  of the output of the given function. e.g.</p>
-
-<pre><code>  List&lt;Double&gt; numbers = List.list(-1.0, 0.0, 1.0);
-
-  F&lt;Double, Boolean&gt; ltZero = new F&lt;Double, Boolean&gt;() {
-      public Boolean f(Double p) {
-          return p &lt; 0;
-      }
-  }
-
-  List&lt;Boolean&gt; output = numbers.map(ltZero);
-</code></pre>
-
-<p>  The contents of <code>output</code> is <code>[false, false, true]</code></p>
-
-<p>  &#8211; <strong>filter/removeAll</strong>: given a <code>List&lt;A&gt;</code>, <code>l</code>,  and a function <code>F&lt;A, Boolean&gt;</code>,
-  <code>f</code>, <code>l.filter(f)</code> returns a list of all the elements in <code>l</code> which, when <code>f</code>
-  is applied to the element, returns <code>true</code>. Similarly, <code>l.removeAll(f)</code>
-  returns a list for which the result of <code>f</code> is <code>false</code>. Note that the input of
-  the function, <code>A</code>, is the same type as the contents of the list.</p>
-
-<p>  &#8211; <strong>foldLeft</strong>: given <code>List&lt;A&gt; l; F2&lt;B, A, B&gt; f; A a</code>, <code>l.foldLeft(f, a)</code>
-  will apply <code>f</code> to <code>a</code> and the first element of <code>l</code> which results in a <code>B</code>.
-  <code>f</code> is the applied to that result and the next element of <code>l</code> and so on until
-  the list is exhausted. This operation is also known as reduce in other
-  langueages/frameworks because it reduces a list of elements to one value.</p>
-
-<p>  &#8211; <strong>head/tail</strong>: <code>head</code> returns the first element of the list and <code>tail</code> returns
-  a new list containing every element except the <code>head</code> of the list. Similarly <code>last</code>
-  returns the last element and <code>init</code> returns all but the last element of a list.</p></li>
-</ul>
-
-
-<h3>Functions</h3>
-
-<p>In functional programming the user specifies what they want e.g. <code>list.filter(ltZero)</code>)
-as opposed to how to get it e.g.</p>
-
-<pre><code>for (Double n : numbers) {
-    if (n &lt; 0) {
-        newList.add(n);
-    }
-}
-</code></pre>
-
-<p>Another thing is that functions can be composed, so the output of one function can
-serve as the input for another function like the following</p>
-
-<pre><code>F&lt;Algorithm, OptimisationSolution&gt; solution = new F&lt;Algorithm, OptimisationSolution&gt;() {
-    public OptimisationSolution f(Algorithm a) {
-        return a.getBestSolution();
-    }
-}
-
-F&lt;OptimisationSolution, Boolean&gt; fitnessThreshold(final double threshold) {
-    return new F&lt;OptimisationSolution, Boolean&gt;() {
-        public Boolean f(OptimisationSolution s) {
-            return s.getFitness().getValue() &lt; threshold;
-        }
-    };
-}
-
-List&lt;Algorithm&gt; algorithms = ...;
-algorithms.filter(solution.andThen(fitnessThreshold(0.5)));
-</code></pre>
-
-<p>Here <code>solution</code> is composed with <code>fitnessThreshold</code>. An algorithm from the list
-is passed to <code>solution</code> which returns an <code>OptimisationSolution</code> which gets passed
-to <code>fitnessThreshold(0.5)</code> which determines if the solution is less than 0.5.
-The result is a list of algorithms whose best solution is less than 0.5. If one
-forgets most of their grammar rules it almost reads like English :)</p>
-
-<p>One thing most people will notice is that the specification can get very verbose.
-This is a consequence of using Java and its generics and not of functional
-programming itself e.g. Scala can condense the above to one line per function.</p>
-
-<h4>What&#8217;s next?</h4>
-
-<p>In the next post the niching functions and structures will be introduced.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/04/23/niching-makeover-part-1/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -550,52 +344,12 @@ because the &#8216;,&#8217; token is overloaded to be both a separator for indiv
 dimensions within the domain definitions as well as being the separator for
 lower and upper bound definitions within the dimension as well.</p>
 
-<p>In order to parse the above, a fair amount of state needs to be maintained
-to know the current &#8220;scope&#8221;. This mutable state results is utter havoc with
-concurrent usage of the domain parser. Two possible fixes could be applied to
-resolve this issue:</p>
-
-<ol>
-<li>Re-create the parser each time, ensuring that each thread has its own
-instance.</li>
-<li>Make the parser stateless.</li>
-</ol>
-
-
-<p>Option (1) seems reasonable but has a massive amount of effort for very little
-gain, whereas option (2) means that the parser can not only be reused, but that
-the concurrency issues should just disappear because no state is mangled.</p>
-
-<p>As a result, we have reimplemented the parser to be as stateless as possible.
-There is still some state within the parboiled parser library code that we
-have made peace with.</p>
-
-<h2>What has changed</h2>
-
-<p>The new parser now has two phases: (1) expansion and (2) transformation. The
-expansion process is responsible to convert &#8220;exponent&#8221; strings into simpler
-forms. As an example:</p>
-
-<pre><code>R^7 =&gt; R,R,R,R,R,R,R
-</code></pre>
-
-<p>The transformation phase then converts the declared types into actual instances
-that may be used within the algorithm. In order to differentiate the bounds
-and dimension elements, the upper and lower bounds separator has been changed
-from a &#8216;,&#8217; (comma) to a &#8216;:&#8217; (colon).</p>
-
-<p>The new domain string is then:</p>
-
-<pre><code>R(-10.0:3.0)^7,Z(0:1),B^2,R(0.0:5.0)
-</code></pre>
-
-<p>This is a minor change to the domain string representation, but the benefits
-we have gained through this little modification are far too large to pass up.
-To allow for the user to update the XML simulation specifications, clearer
-error messages have been created with the simulation refusing to execute
-without an updated domain string.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/04/17/simplified-domain-string-grammar/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -633,188 +387,12 @@ without an updated domain string.</p>
 affect the way CIlib is used. The changes were made to the stopping conditions,
 topologies and control parameters.</p>
 
-<h3>Stopping Conditions</h3>
-
-<p>In a bid to increase genericity (is that a word?) and remove duplicate code the
-stopping conditions package was revamped. The new stopping condition classes are as
-follows:</p>
-
-<ul>
-<li><p>MeasuredStoppingCondition which takes in a measurment an Objective and a target
-The measurement is taken from the measurement package, objective can be either
-Maximum or Minimum and target is the value the measurement must exceed (above
-for Maximum, below for Minimum) for the algorithm to terminate.</p></li>
-<li><p>MaintatinedStoppingCondition whcih takes in another StoppingCondition and the
-number of consecutive iterations for which the condition must hold before the
-algorithm can terminate.</p></li>
-</ul>
-
-
-<p>Here are a few examples showing the differences from the before and after the
-changes.</p>
-
-<h4>Before</h4>
-
-<p>Java:</p>
-
-<pre><code>StoppingCondition sc = new MaximumIterations(2000);
-
-StoppingCondition sc = new MinimumDiversity();
-sc.setMinimumDiversity(ConstantControlParameter.of(0.01));
-sc.setConsecutiveIterations(ConstantControlParameter.of(20));
-</code></pre>
-
-<p>XML:</p>
-
-<pre><code>&lt;addStoppingCondition class="stoppingcondition.MaximumIterations" maximumIterations="2000"/&gt;
-
-&lt;addStoppingCondition class="stoppingcondition.MinimumDiversity"&gt;
-    &lt;minimumDiversity class="controlparameter.ConstantControlParameter" parameter="0.01"/&gt;
-    &lt;consecutiveIterations class="controlparameter.ConstantControlParameter" parameter="20"/&gt;
-&lt;/addStoppingCondition&gt;
-</code></pre>
-
-<h4>After</h4>
-
-<p>Java:</p>
-
-<pre><code>StoppingCondition sc = new MeasuredStoppingCondition(new Iterations(), new Maximum(), 2000);
-
-StoppingCondition sc = new MaintainedStoppingCondition(new MeasuredStoppingCondition(new Diversity(), new Minimum(), 0.01), 20);
-</code></pre>
-
-<p>XML:</p>
-
-<pre><code>&lt;addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="2000"&gt;
-    &lt;measurement class="measurement.generic.Iterations"/&gt;
-    &lt;objective class="stoppingcondition.Maximum/&gt;"
-&lt;/addStoppingCondition&gt;
-
-&lt;addStoppingCondition class="stoppingcondition.MaintainedStoppingCondition" consecutiveIterations="20"&gt;
-    &lt;condition class="stoppingcondition.MeasuredStoppingCondition" target="0.01"&gt;
-        &lt;measurement class="measurement.single.diversity.Diversity"/&gt;
-        &lt;objective class="stoppingcondition.Minimum/&gt;"
-    &lt;/condition&gt;
-&lt;/addStoppingCondition&gt;
-</code></pre>
-
-<h3>Topologies</h3>
-
-<p>The main difference regarding topologies is how to get the best entity/entities.
-The getBestEntity method has been removed from the Topology classes and has been
-placed in the Topologies class as a static method along with a number of other
-methods. This was done to prevent overcrowding the topology interface and to
-separate concerns since a topology is only suppose to impose a structure on a
-population of entities.</p>
-
-<h4>Before</h4>
-
-<pre><code>Particle currentBest = topology.getBestEntity();
-Particle gBest = topology.getBestEntity(new SocialBestFitnessComparator());
-
-Particle nBest = particle.getNeighbourhoodBest();
-// Although to the nBest could have changed so a more accurate way would be
-// to iterate through the neighbourhood of the particle and compare each one
-</code></pre>
-
-<h4>After</h4>
-
-<pre><code>Particle currentBest = Topologies.getBestEntity(topology);
-Particle gBest = Topologies.getBestEntity(topology, new SocialBestFitnessComparator());
-
-Particle currentNBest = Topologies.getNeighbourhoodBest(topology, particle);
-Particle nBest = Topologies.getNeighbourhoodBest(topology, particle, new SocialBestFitnessComparator());
-</code></pre>
-
-<h3>Control Parameters</h3>
-
-<p>Before, using control parameters that could change (e.g. linear increasing/decreasing
-parameters) meant that the user had to update the parameters every iteration.
-This became a hassle if a control parameter was introduced into code that already
-had a big inheritance structure since a mechanism for updating the control parameters
-would have to be introduced into each of those classes.</p>
-
-<p>The changes made allow a control parameter to automatically update its value when
-the getParameter method is called. One implication of this is that parameters cant
-be updated only once per iteration. This is a problem for algorithms that use multiple
-stopping conditions or whose stopping conditions dont include maximum iterations
-(ControlParameters updateon percentage completion of an algorith which is determined
-by the stopping conditions). This problem is dealt with by introducing a new
-ControlParameter: UpdateOnIterationControlParameter which takes in a delegate
-control parameter and updates it at the end of each iteration.</p>
-
-<p>Additionally, some parameters were merged to avoid duplicating code and control
-parameters are only bounded if used with BoundedControlParameter (which is a class
-now, not an interface).</p>
-
-<h4>Before</h4>
-
-<p>Java:</p>
-
-<pre><code>// Only updated at the end of an iteration or when updateParameter was called
-LinearIncreasingControlParameter cp = new LinearIncreasingControlParameter();
-cp.setUpperBound(0.9);
-cp.setLowerBound(0.4);
-cp.setParameter(0.4);
-
-LinearDecreasingControlParameter cp = new LinearDecreasingControlParameter();
-cp.setUpperBound(0.9);
-cp.setLowerBound(0.4);
-cp.setParameter(0.9);
-</code></pre>
-
-<p>XML:</p>
-
-<pre><code>&lt;inertiaWeight class="controlparameter.LinearIncreasingControlParameter"&gt;
-    &lt;upperBound value="0.9"/&gt;
-    &lt;lowerBound value="0.4"/&gt;
-    &lt;parameter value="0.4"/&gt;
-&lt;/inertiaWeight&gt;
-
-&lt;inertiaWeight class="controlparameter.LinearDecreasingControlParameter"&gt;
-    &lt;upperBound value="0.9"/&gt;
-    &lt;lowerBound value="0.4"/&gt;
-    &lt;parameter value="0.9"/&gt;
-&lt;/inertiaWeight&gt;
-</code></pre>
-
-<h4>After</h4>
-
-<p>Java:</p>
-
-<pre><code>// Updates whenever it is called
-LinearlyVaryingControlParameter cp = new LinearlyVaryingControlParameter();
-cp.setInitialValue(0.4);
-cp.setFinalValue(0.9);
-
-LinearlyVaryingControlParameter cp = new LinearlyVaryingControlParameter();
-cp.setInitialValue(0.9);
-cp.setFinalValue(0.4);
-
-// Will update otherCP at the end of an iteration
-UpdateOnIterationControlParameter cp = new UpdateOnIterationControlParameter();
-cp.setDelegate(otherCP);
-
-// Will always keep otherCP within bounds
-BoundedControlParameter cp = new BoundedControlParameter();
-cp.setBounds(new Bounds(-1, 1));
-cp.setDelegate(otherCP);
-</code></pre>
-
-<p>XML:</p>
-
-<pre><code>&lt;inertiaWeight class="controlparameter.LinearlyVaryingControlParameter" initialValue="0.4" finalValue="0.9"/&gt;
-
-&lt;inertiaWeight class="controlparameter.LinearlyVaryingControlParameter" initialValue="0.9" finalValue="0.4"/&gt;
-
-&lt;inertiaWeight class="controlparameter.UpdateOnIterationControlParameter"&gt;
-    &lt;delegate class="controlparameter.LinearlyVaryingControlParameter" initialValue="0.9" finalValue="0.4"/&gt;
-&lt;/inertiaWeight&gt;
-</code></pre>
-
-<p>If there are any questions join us on <a href="http://webchat.freenode.net/?channels=cilib">irc chat</a>.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/04/12/recent-changes-in-master/">Read on &rarr;</a>
+    </footer>
   
 
 

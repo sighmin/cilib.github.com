@@ -4,7 +4,7 @@
   <title><![CDATA[Category: updates | Computational Intelligence Library]]></title>
   <link href="http://cilib.github.com/blog/categories/updates/atom.xml" rel="self"/>
   <link href="http://cilib.github.com/"/>
-  <updated>2012-12-19T10:25:46+02:00</updated>
+  <updated>2012-12-19T10:35:45+02:00</updated>
   <id>http://cilib.github.com/</id>
   <author>
     <name><![CDATA[CIRG]]></name>
@@ -30,6 +30,9 @@ as a simple string, such as:</p>
 because the ',' token is overloaded to be both a separator for individual
 dimensions within the domain definitions as well as being the separator for
 lower and upper bound definitions within the dimension as well.</p>
+
+<!-- more -->
+
 
 <p>In order to parse the above, a fair amount of state needs to be maintained
 to know the current "scope". This mutable state results is utter havoc with
@@ -86,6 +89,9 @@ without an updated domain string.</p>
     <content type="html"><![CDATA[<p>A couple of patches recently made their way into the master branch of CIlib which
 affect the way CIlib is used. The changes were made to the stopping conditions,
 topologies and control parameters.</p>
+
+<!-- more -->
+
 
 <h3>Stopping Conditions</h3>
 
