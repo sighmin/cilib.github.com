@@ -9,8 +9,8 @@
   <meta name="author" content="CIRG">
 
   
-  <meta name="description" content="The 0.7.5 release of CIlib has been staged. The release consists of many changes from
-various contributors. We would like to thank everyone for the &hellip;">
+  <meta name="description" content="Previously, CIlib handled random number generation by creating a new stream of
+random numbers for each RandomProvider that was created. This made it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,52 @@ MathJax.Hub.Config({
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/19/rng-changes-a-single-stream/">RNG Changes: A Single Stream</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-19T11:46:00+02:00" pubdate data-updated="true">Dec 19<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Previously, CIlib handled random number generation by creating a new stream of
+random numbers for each RandomProvider that was created. This made it very
+difficult (read: impossible) to reproduce the results of simulations.</p>
+
+<p>The new changes that were merged recently fixes this by using one RNG per sample.
+This post will explain how to use the new system.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/19/rng-changes-a-single-stream/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -411,6 +457,10 @@ topologies and control parameters.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/12/19/rng-changes-a-single-stream/">RNG Changes: A single stream</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/11/12/075-release/">CIlib 0.7.5 released</a>
       </li>
     
@@ -424,10 +474,6 @@ topologies and control parameters.</p>
     
       <li class="post">
         <a href="/blog/2012/07/13/math-formulae-in-documentation/">Math formulae in documentation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/23/niching-makeover-part-1/">Niching Makeover: part 1</a>
       </li>
     
   </ul>

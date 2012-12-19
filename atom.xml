@@ -4,7 +4,7 @@
   <title><![CDATA[Computational Intelligence Library]]></title>
   <link href="http://cilib.github.com/atom.xml" rel="self"/>
   <link href="http://cilib.github.com/"/>
-  <updated>2012-12-19T10:35:45+02:00</updated>
+  <updated>2012-12-19T13:04:10+02:00</updated>
   <id>http://cilib.github.com/</id>
   <author>
     <name><![CDATA[CIRG]]></name>
@@ -12,6 +12,41 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RNG Changes: A single stream]]></title>
+    <link href="http://cilib.github.com/blog/2012/12/19/rng-changes-a-single-stream/"/>
+    <updated>2012-12-19T11:46:00+02:00</updated>
+    <id>http://cilib.github.com/blog/2012/12/19/rng-changes-a-single-stream</id>
+    <content type="html"><![CDATA[<p>Previously, CIlib handled random number generation by creating a new stream of
+random numbers for each RandomProvider that was created. This made it very
+difficult (read: impossible) to reproduce the results of simulations.</p>
+
+<p>The new changes that were merged recently fixes this by using one RNG per sample.
+This post will explain how to use the new system.</p>
+
+<!-- more -->
+
+
+<ul>
+<li>The random values are retrieved using static methods in the
+  <code>net.sourceforge.cilib.math.random.generator.Rand</code> class.</li>
+<li>If you just need a uniform double use <code>Rand.nextDouble()</code> (e.g. for probabilities)</li>
+<li>For other types (boolean, int, long, etc.) use the appropriate <code>nextX()</code> methods.</li>
+<li>If your code can use different distributions use the <code>ProbabilityDistribution</code>
+  classes in the <code>math.random</code> package. They use the Rand class internally.</li>
+<li>If you need to set the seed for testing your code use <code>Rand.setSeed(seed)</code>.
+  You should not set the seed anywhere else in the code.</li>
+<li>Setting the seed for simulations is done in the XML. Look at the
+  <code>simulator/xml/seeder.xml</code> example file, it shows how to save and set the seed.</li>
+</ul>
+
+
+<p>Hopefully these changes make using the RNG easier. As usual, if there are any problems
+please report them on the issue tracker on github or contact us using IRC or the
+mailing list.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CIlib 0.7.5 released]]></title>
