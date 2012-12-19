@@ -4,7 +4,7 @@
   <title><![CDATA[Category: announcements | Computational Intelligence Library]]></title>
   <link href="http://cilib.github.com/blog/categories/announcements/atom.xml" rel="self"/>
   <link href="http://cilib.github.com/"/>
-  <updated>2012-11-19T08:42:04+02:00</updated>
+  <updated>2012-12-19T10:25:46+02:00</updated>
   <id>http://cilib.github.com/</id>
   <author>
     <name><![CDATA[CIRG]]></name>
@@ -24,31 +24,35 @@ release. What follows are the main highlights for the 0.7.5 release.</p>
 
 <!-- more -->
 
-<h3 id="change-log">Change Log</h3>
+
+<h3>Change Log</h3>
+
 <p>Numerous changes have been included into the release, but the most notable are listed here:</p>
 
 <ul>
-  <li>New clustering implementation (for PSOs).</li>
-  <li>Rework of Niching (NichePSO) to be more sane.</li>
-  <li>Removed the “games” package due to its unmaintained state. It will be
+<li>New clustering implementation (for PSOs).</li>
+<li>Rework of Niching (NichePSO) to be more sane.</li>
+<li>Removed the "games" package due to its unmaintained state. It will be
 revised in a future release.</li>
-  <li>Removed several methods that are largely not required (in Meansurements
+<li>Removed several methods that are largely not required (in Meansurements
 and other related classes)</li>
-  <li>FunctionMinimizationProblem and FunctionMaximizationProblem have been
+<li>FunctionMinimizationProblem and FunctionMaximizationProblem have been
 removed. Instead, use FunctionOptimizationProblem with a given
 Objective. The only valid Objectives are Minimize and Maximize, with
 Minimize being assumed to be the default, if none is specified.</li>
-  <li>Added Lambda-Gamma neural networks</li>
-  <li>Removed a number of interal classes in favor of those already provided
+<li>Added Lambda-Gamma neural networks</li>
+<li>Removed a number of interal classes in favor of those already provided
 by dependencies</li>
-  <li>A number of crossover strategies have had fixes applied / newly added</li>
-  <li>Cascading neural networks</li>
-  <li>Migrated from maven to SBT as build system</li>
-  <li>Several deprecations have been removed</li>
-  <li>Additional benchmark functions have been included</li>
+<li>A number of crossover strategies have had fixes applied / newly added</li>
+<li>Cascading neural networks</li>
+<li>Migrated from maven to SBT as build system</li>
+<li>Several deprecations have been removed</li>
+<li>Additional benchmark functions have been included</li>
 </ul>
 
-<h3 id="issues">Issues</h3>
+
+<h3>Issues</h3>
+
 <p>For bug reports or feature requests, please raise an issue
 <a href="http://github.com/cilib/cilib/issues">here</a>.
 Feel free to contact us via the
@@ -56,7 +60,7 @@ Feel free to contact us via the
 <a href="https://groups.google.com/forum/?fromgroups=#!forum/cilib-dev">development</a> mailing
 lists. We are also available on the FreeNode IRC network in the channel <code>#cilib</code>.</p>
 
-<h3 id="distribution">Distribution</h3>
+<h3>Distribution</h3>
 
 <p>In this release, we have changed the layout of the project such that there are now
 two sub-projects: <code>library</code> and <code>simulator</code>. The <code>library</code> contains all the source
@@ -72,7 +76,7 @@ contains the simulator application with bundled library code and a series of
 example XML files is available <a href="http://cilib.net/releases/cilib-simulator-0.7.5.zip">here</a>.
 It is recommended that a script is setup, and placed on your <code>$PATH</code> to run the simulator.</p>
 
-<p><div><script src='https://gist.github.com/3122738.js?file='></script>
+<p><div><script src='https://gist.github.com/3122738.js'></script>
 <noscript><pre><code>#!/bin/bash
 
 # This script expects a few environment variables:
