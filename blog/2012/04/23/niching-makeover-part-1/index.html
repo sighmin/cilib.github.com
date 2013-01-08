@@ -105,8 +105,7 @@ ones will explain the changes and how to use them.</p>
 
 <!-- more -->
 
-
-<h3>Going Functional</h3>
+<h3 id="going-functional">Going Functional</h3>
 
 <p>A functional approach has been taken with regards to the refactor. This means that
 instead of objects being changed in place (e.g. <code>particle.setCandidateSolution(newSolution)</code>)
@@ -124,74 +123,76 @@ implemented and so a few definitions are presented here to make the transition
 easier. For those who want to make changes to the code a java library,
 Functional Java (FJ), was used to implement the changes.</p>
 
-<h3>Definitions</h3>
+<h3 id="definitions">Definitions</h3>
 
 <ul>
-<li><h4>Function:</h4>
-
-<p>  A function is a unit of code that transforms an input into an output. The FJ
+  <li>
+    <h4 id="function">Function:</h4>
+    <p>A function is a unit of code that transforms an input into an output. The FJ
   library has a number of function classes for different numbers of inputs e.g.</p>
 
-<pre><code>  F&lt;A, Z&gt;
+    <pre><code>  F&lt;A, Z&gt;
 </code></pre>
 
-<p>  is a function that takes an A as input and outputs a Z and</p>
+    <p>is a function that takes an A as input and outputs a Z and</p>
 
-<pre><code>  F2&lt;A, B, Z&gt;
+    <pre><code>  F2&lt;A, B, Z&gt;
   F3&lt;A, B, C, Z&gt;
   ...
   F8&lt;A, B, C, D, E, F, G, H, Z&gt;
 </code></pre>
 
-<p>  take in an <code>A ... H</code> and return a <code>Z</code>. To apply the functions a method, <code>f(...)</code>,
+    <p>take in an <code>A ... H</code> and return a <code>Z</code>. To apply the functions a method, <code>f(...)</code>,
   is called. Here is an example that takes a particle and returns its candidate
   solution.</p>
 
-<pre><code>  F&lt;Particle, Vector&gt; solution = new F&lt;Particle, Vector&gt;() {
+    <pre><code>  F&lt;Particle, Vector&gt; solution = new F&lt;Particle, Vector&gt;() {
       public Vector f(Particle p) {
           return (Vector) p.getCandidateSolution();
       }
   }
 </code></pre>
 
-<p>  and to call it for a particular particle</p>
+    <p>and to call it for a particular particle</p>
 
-<pre><code>  solution.f(particularParticle)
-</code></pre></li>
-<li><h4>Tuple/Product:</h4>
-
-<p>  A tuple is a collection of heterogeneous data. It allows functions to return
-  more than one result. Using a similar naming convention to functions, FJ&#8217;s
+    <pre><code>  solution.f(particularParticle)
+</code></pre>
+  </li>
+  <li>
+    <h4 id="tupleproduct">Tuple/Product:</h4>
+    <p>A tuple is a collection of heterogeneous data. It allows functions to return
+  more than one result. Using a similar naming convention to functions, FJ’s
   tuples are called</p>
 
-<pre><code>  P1&lt;A&gt;
+    <pre><code>  P1&lt;A&gt;
   P2&lt;A, B&gt;
   ...
   P8&lt;A, B, C, D, E, F, G, H&gt;
 </code></pre>
 
-<p>  To create a tuple use the static method <code>P.p(...)</code> e.g. to create a tuple of a
+    <p>To create a tuple use the static method <code>P.p(...)</code> e.g. to create a tuple of a
   particle with an associated score use</p>
 
-<pre><code>  P2&lt;Particle, Double&gt; x = P.p(particle, score)
+    <pre><code>  P2&lt;Particle, Double&gt; x = P.p(particle, score)
 </code></pre>
 
-<p>  To access the individual elements of a tuple use the <code>_n()</code> methods, where n
+    <p>To access the individual elements of a tuple use the <code>_n()</code> methods, where n
   is the position of the element in the tuple e.g.</p>
 
-<pre><code>  Particle particle = x._1()
+    <pre><code>  Particle particle = x._1()
   Double score = x._2()
-</code></pre></li>
-<li><h4>Lists:</h4>
-
-<p>  Lists in FJ have far more functionality (no pun intended) than Java&#8217;s collections.
+</code></pre>
+  </li>
+  <li>
+    <h4 id="lists">Lists:</h4>
+    <p>Lists in FJ have far more functionality (no pun intended) than Java’s collections.
   Here are a few operations that can be performed on them that apply the functional
   paradigm.</p>
 
-<p>  &#8211; <strong>map</strong>: this applies a function to each element and returns a new list consisting
+    <p>– <strong>map</strong>: this applies a function to each element and returns a new list consisting
   of the output of the given function. e.g.</p>
 
-<pre><code>  List&lt;Double&gt; numbers = List.list(-1.0, 0.0, 1.0);
+    <pre><code>  List&lt;Double&gt; numbers = List.list(-1.0, 0.0, 1.0);
 
   F&lt;Double, Boolean&gt; ltZero = new F&lt;Double, Boolean&gt;() {
       public Boolean f(Double p) {
@@ -202,27 +203,27 @@ Functional Java (FJ), was used to implement the changes.</p>
   List&lt;Boolean&gt; output = numbers.map(ltZero);
 </code></pre>
 
-<p>  The contents of <code>output</code> is <code>[false, false, true]</code></p>
+    <p>The contents of <code>output</code> is <code>[false, false, true]</code></p>
 
-<p>  &#8211; <strong>filter/removeAll</strong>: given a <code>List&lt;A&gt;</code>, <code>l</code>,  and a function <code>F&lt;A, Boolean&gt;</code>,
+    <p>– <strong>filter/removeAll</strong>: given a <code>List&lt;A&gt;</code>, <code>l</code>,  and a function <code>F&lt;A, Boolean&gt;</code>,
   <code>f</code>, <code>l.filter(f)</code> returns a list of all the elements in <code>l</code> which, when <code>f</code>
   is applied to the element, returns <code>true</code>. Similarly, <code>l.removeAll(f)</code>
   returns a list for which the result of <code>f</code> is <code>false</code>. Note that the input of
   the function, <code>A</code>, is the same type as the contents of the list.</p>
 
-<p>  &#8211; <strong>foldLeft</strong>: given <code>List&lt;A&gt; l; F2&lt;B, A, B&gt; f; A a</code>, <code>l.foldLeft(f, a)</code>
+    <p>– <strong>foldLeft</strong>: given <code>List&lt;A&gt; l; F2&lt;B, A, B&gt; f; A a</code>, <code>l.foldLeft(f, a)</code>
   will apply <code>f</code> to <code>a</code> and the first element of <code>l</code> which results in a <code>B</code>.
   <code>f</code> is the applied to that result and the next element of <code>l</code> and so on until
   the list is exhausted. This operation is also known as reduce in other
   langueages/frameworks because it reduces a list of elements to one value.</p>
 
-<p>  &#8211; <strong>head/tail</strong>: <code>head</code> returns the first element of the list and <code>tail</code> returns
+    <p>– <strong>head/tail</strong>: <code>head</code> returns the first element of the list and <code>tail</code> returns
   a new list containing every element except the <code>head</code> of the list. Similarly <code>last</code>
-  returns the last element and <code>init</code> returns all but the last element of a list.</p></li>
+  returns the last element and <code>init</code> returns all but the last element of a list.</p>
+  </li>
 </ul>
 
-
-<h3>Functions</h3>
+<h3 id="functions">Functions</h3>
 
 <p>In functional programming the user specifies what they want e.g. <code>list.filter(ltZero)</code>)
 as opposed to how to get it e.g.</p>
@@ -265,7 +266,7 @@ forgets most of their grammar rules it almost reads like English :)</p>
 This is a consequence of using Java and its generics and not of functional
 programming itself e.g. Scala can condense the above to one line per function.</p>
 
-<h4>What&#8217;s next?</h4>
+<h4 id="whats-next">What’s next?</h4>
 
 <p>In the next post the niching functions and structures will be introduced.</p>
 </div>

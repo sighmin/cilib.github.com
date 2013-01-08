@@ -100,8 +100,7 @@ MathJax.Hub.Config({
   </header>
 
 
-<div class="entry-content"><h2>The need to change domain string grammar</h2>
-
+<div class="entry-content"><h2 id="the-need-to-change-domain-string-grammar">The need to change domain string grammar</h2>
 <p>Defining a domain for use within a simulation is allowed within CIlib
 as a simple string, such as:</p>
 
@@ -109,24 +108,22 @@ as a simple string, such as:</p>
 </code></pre>
 
 <p>The notation is simple enough, but it is unfortunately difficult to work with
-because the &#8216;,&#8217; token is overloaded to be both a separator for individual
+because the ‘,’ token is overloaded to be both a separator for individual
 dimensions within the domain definitions as well as being the separator for
 lower and upper bound definitions within the dimension as well.</p>
 
 <!-- more -->
 
-
 <p>In order to parse the above, a fair amount of state needs to be maintained
-to know the current &#8220;scope&#8221;. This mutable state results is utter havoc with
+to know the current “scope”. This mutable state results is utter havoc with
 concurrent usage of the domain parser. Two possible fixes could be applied to
 resolve this issue:</p>
 
 <ol>
-<li>Re-create the parser each time, ensuring that each thread has its own
+  <li>Re-create the parser each time, ensuring that each thread has its own
 instance.</li>
-<li>Make the parser stateless.</li>
+  <li>Make the parser stateless.</li>
 </ol>
-
 
 <p>Option (1) seems reasonable but has a massive amount of effort for very little
 gain, whereas option (2) means that the parser can not only be reused, but that
@@ -136,10 +133,9 @@ the concurrency issues should just disappear because no state is mangled.</p>
 There is still some state within the parboiled parser library code that we
 have made peace with.</p>
 
-<h2>What has changed</h2>
-
+<h2 id="what-has-changed">What has changed</h2>
 <p>The new parser now has two phases: (1) expansion and (2) transformation. The
-expansion process is responsible to convert &#8220;exponent&#8221; strings into simpler
+expansion process is responsible to convert “exponent” strings into simpler
 forms. As an example:</p>
 
 <pre><code>R^7 =&gt; R,R,R,R,R,R,R
@@ -148,7 +144,7 @@ forms. As an example:</p>
 <p>The transformation phase then converts the declared types into actual instances
 that may be used within the algorithm. In order to differentiate the bounds
 and dimension elements, the upper and lower bounds separator has been changed
-from a &#8216;,&#8217; (comma) to a &#8216;:&#8217; (colon).</p>
+from a ‘,’ (comma) to a ‘:’ (colon).</p>
 
 <p>The new domain string is then:</p>
 

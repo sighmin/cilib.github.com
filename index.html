@@ -9,8 +9,7 @@
   <meta name="author" content="CIRG">
 
   
-  <meta name="description" content="Previously, CIlib handled random number generation by creating a new stream of
-random numbers for each RandomProvider that was created. This made it &hellip;">
+  <meta name="description" content="Previously, CIlib handled random number generation by creating a new stream of random numbers for each RandomProvider that was created. This made it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,11 +103,11 @@ MathJax.Hub.Config({
   </header>
 
 
-  <div class="entry-content"><p>Previously, CIlib handled random number generation by creating a new stream of
-random numbers for each RandomProvider that was created. This made it very
+  <div class="entry-content"><p>Previously, CIlib handled random number generation by creating a new stream of 
+random numbers for each RandomProvider that was created. This made it very 
 difficult (read: impossible) to reproduce the results of simulations.</p>
 
-<p>The new changes that were merged recently fixes this by using one RNG per sample.
+<p>The new changes that were merged recently fixes this by using one RNG per sample. 
 This post will explain how to use the new system.</p>
 
 </div>
@@ -239,14 +238,13 @@ and that the latest CIlib source code has been retrieved.</p>
   <div class="entry-content"><p>In the past, CIlib was released as a distribution and included a few artifacts:</p>
 
 <ul>
-<li>That actual CIlib &#8220;fat&#8221; jar file (together with external dependencies).</li>
-<li>A collection of sample XML documents that defined the specifications for the XML based simulator.</li>
-<li>Shell scripts for users to &#8220;run&#8221; the simulator, providing a XML specification.</li>
+  <li>That actual CIlib “fat” jar file (together with external dependencies).</li>
+  <li>A collection of sample XML documents that defined the specifications for the XML based simulator.</li>
+  <li>Shell scripts for users to “run” the simulator, providing a XML specification.</li>
 </ul>
 
-
 <p>We are continuously trying to improve CIlib and, as such, we have decided to remove the simulator
-scripts in favor of letting the simulator provide the &#8220;running&#8221; functionality in the form of an executable jar
+scripts in favor of letting the simulator provide the “running” functionality in the form of an executable jar
 file.</p>
 
 </div>
@@ -289,7 +287,7 @@ file.</p>
 
 
   <div class="entry-content"><p>This has been something that has provided an unending amount of frustration: creating LaTeX style math
-formula on the web. That being said, I&#8217;m very thankful to <code>oscarvarto</code> on the IRC channel for pointing us
+formula on the web. That being said, I’m very thankful to <code>oscarvarto</code> on the IRC channel for pointing us
 towards a little library called <a href="http://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 
 <p>We will be using this to produce proper documentation for math formulae. I believe that this is
@@ -297,7 +295,7 @@ a good step forward for our CIlib documentation effort. As a teaser of the formu
 be available, the standard PSO velocity update equation is given below (this includes the
 inertia component):</p>
 
-<p>$$v<em>{ij}(t+1) = w_i v</em>{ij}(t) + r_1 c_1 (y<em>{ij}(t) - x</em>{ij}(t)) + r_2 c_2 (\hat{y}<em>{j}(t) - x</em>{ij}(t))$$</p>
+<script type="math/tex; mode=display">v_{ij}(t+1) = w_i v_{ij}(t) + r_1 c_1 (y_{ij}(t) - x_{ij}(t)) + r_2 c_2 (\hat{y}_{j}(t) - x_{ij}(t))</script>
 
 <p>This should provide us with better tools going forward :)</p>
 </div>
@@ -377,8 +375,7 @@ ones will explain the changes and how to use them.</p>
   </header>
 
 
-  <div class="entry-content"><h2>The need to change domain string grammar</h2>
-
+  <div class="entry-content"><h2 id="the-need-to-change-domain-string-grammar">The need to change domain string grammar</h2>
 <p>Defining a domain for use within a simulation is allowed within CIlib
 as a simple string, such as:</p>
 
@@ -386,7 +383,7 @@ as a simple string, such as:</p>
 </code></pre>
 
 <p>The notation is simple enough, but it is unfortunately difficult to work with
-because the &#8216;,&#8217; token is overloaded to be both a separator for individual
+because the ‘,’ token is overloaded to be both a separator for individual
 dimensions within the domain definitions as well as being the separator for
 lower and upper bound definitions within the dimension as well.</p>
 

@@ -9,8 +9,7 @@
   <meta name="author" content="CIRG">
 
   
-  <meta name="description" content="Previously, CIlib handled random number generation by creating a new stream of
-random numbers for each RandomProvider that was created. This made it &hellip;">
+  <meta name="description" content="Previously, CIlib handled random number generation by creating a new stream of random numbers for each RandomProvider that was created. This made it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,33 +100,32 @@ MathJax.Hub.Config({
   </header>
 
 
-<div class="entry-content"><p>Previously, CIlib handled random number generation by creating a new stream of
-random numbers for each RandomProvider that was created. This made it very
+<div class="entry-content"><p>Previously, CIlib handled random number generation by creating a new stream of 
+random numbers for each RandomProvider that was created. This made it very 
 difficult (read: impossible) to reproduce the results of simulations.</p>
 
-<p>The new changes that were merged recently fixes this by using one RNG per sample.
+<p>The new changes that were merged recently fixes this by using one RNG per sample. 
 This post will explain how to use the new system.</p>
 
 <!-- more -->
 
-
 <ul>
-<li>The random values are retrieved using static methods in the
+  <li>The random values are retrieved using static methods in the 
   <code>net.sourceforge.cilib.math.random.generator.Rand</code> class.</li>
-<li>If you just need a uniform double use <code>Rand.nextDouble()</code> (e.g. for probabilities)</li>
-<li>For other types (boolean, int, long, etc.) use the appropriate <code>nextX()</code> methods.</li>
-<li>If your code can use different distributions use the <code>ProbabilityDistribution</code>
+  <li>If you just need a uniform double use <code>Rand.nextDouble()</code> (e.g. for probabilities)</li>
+  <li>For other types (boolean, int, long, etc.) use the appropriate <code>nextX()</code> methods.</li>
+  <li>If your code can use different distributions use the <code>ProbabilityDistribution</code>
   classes in the <code>math.random</code> package. They use the Rand class internally.</li>
-<li>If you need to set the seed for testing your code use <code>Rand.setSeed(seed)</code>.
+  <li>If you need to set the seed for testing your code use <code>Rand.setSeed(seed)</code>.
   You should not set the seed anywhere else in the code.</li>
-<li>Setting the seed for simulations is done in the XML. Look at the
+  <li>Setting the seed for simulations is done in the XML. Look at the
   <code>simulator/xml/seeder.xml</code> example file, it shows how to save and set the seed.</li>
 </ul>
-
 
 <p>Hopefully these changes make using the RNG easier. As usual, if there are any problems
 please report them on the issue tracker on github or contact us using IRC or the
 mailing list.</p>
+
 </div>
 
 

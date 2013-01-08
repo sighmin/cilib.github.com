@@ -106,29 +106,30 @@ topologies and control parameters.</p>
 
 <!-- more -->
 
-
-<h3>Stopping Conditions</h3>
+<h3 id="stopping-conditions">Stopping Conditions</h3>
 
 <p>In a bid to increase genericity (is that a word?) and remove duplicate code the
 stopping conditions package was revamped. The new stopping condition classes are as
 follows:</p>
 
 <ul>
-<li><p>MeasuredStoppingCondition which takes in a measurment an Objective and a target
+  <li>
+    <p>MeasuredStoppingCondition which takes in a measurment an Objective and a target
 The measurement is taken from the measurement package, objective can be either
 Maximum or Minimum and target is the value the measurement must exceed (above
-for Maximum, below for Minimum) for the algorithm to terminate.</p></li>
-<li><p>MaintatinedStoppingCondition whcih takes in another StoppingCondition and the
+for Maximum, below for Minimum) for the algorithm to terminate.</p>
+  </li>
+  <li>
+    <p>MaintatinedStoppingCondition whcih takes in another StoppingCondition and the
 number of consecutive iterations for which the condition must hold before the
-algorithm can terminate.</p></li>
+algorithm can terminate.</p>
+  </li>
 </ul>
-
 
 <p>Here are a few examples showing the differences from the before and after the
 changes.</p>
 
-<h4>Before</h4>
-
+<h4 id="before">Before</h4>
 <p>Java:</p>
 
 <pre><code>StoppingCondition sc = new MaximumIterations(2000);
@@ -148,8 +149,7 @@ sc.setConsecutiveIterations(ConstantControlParameter.of(20));
 &lt;/addStoppingCondition&gt;
 </code></pre>
 
-<h4>After</h4>
-
+<h4 id="after">After</h4>
 <p>Java:</p>
 
 <pre><code>StoppingCondition sc = new MeasuredStoppingCondition(new Iterations(), new Maximum(), 2000);
@@ -172,7 +172,7 @@ StoppingCondition sc = new MaintainedStoppingCondition(new MeasuredStoppingCondi
 &lt;/addStoppingCondition&gt;
 </code></pre>
 
-<h3>Topologies</h3>
+<h3 id="topologies">Topologies</h3>
 
 <p>The main difference regarding topologies is how to get the best entity/entities.
 The getBestEntity method has been removed from the Topology classes and has been
@@ -181,7 +181,7 @@ methods. This was done to prevent overcrowding the topology interface and to
 separate concerns since a topology is only suppose to impose a structure on a
 population of entities.</p>
 
-<h4>Before</h4>
+<h4 id="before-1">Before</h4>
 
 <pre><code>Particle currentBest = topology.getBestEntity();
 Particle gBest = topology.getBestEntity(new SocialBestFitnessComparator());
@@ -191,7 +191,7 @@ Particle nBest = particle.getNeighbourhoodBest();
 // to iterate through the neighbourhood of the particle and compare each one
 </code></pre>
 
-<h4>After</h4>
+<h4 id="after-1">After</h4>
 
 <pre><code>Particle currentBest = Topologies.getBestEntity(topology);
 Particle gBest = Topologies.getBestEntity(topology, new SocialBestFitnessComparator());
@@ -200,7 +200,7 @@ Particle currentNBest = Topologies.getNeighbourhoodBest(topology, particle);
 Particle nBest = Topologies.getNeighbourhoodBest(topology, particle, new SocialBestFitnessComparator());
 </code></pre>
 
-<h3>Control Parameters</h3>
+<h3 id="control-parameters">Control Parameters</h3>
 
 <p>Before, using control parameters that could change (e.g. linear increasing/decreasing
 parameters) meant that the user had to update the parameters every iteration.
@@ -221,8 +221,7 @@ control parameter and updates it at the end of each iteration.</p>
 parameters are only bounded if used with BoundedControlParameter (which is a class
 now, not an interface).</p>
 
-<h4>Before</h4>
-
+<h4 id="before-2">Before</h4>
 <p>Java:</p>
 
 <pre><code>// Only updated at the end of an iteration or when updateParameter was called
@@ -252,8 +251,7 @@ cp.setParameter(0.9);
 &lt;/inertiaWeight&gt;
 </code></pre>
 
-<h4>After</h4>
-
+<h4 id="after-2">After</h4>
 <p>Java:</p>
 
 <pre><code>// Updates whenever it is called
